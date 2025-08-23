@@ -99,10 +99,18 @@ cd windows
 # Instrucciones específicas para Windows
 ```
 
-#### **🐍 Python General** (Próximamente)
+#### **🐍 Python General**
 ```bash
 cd python
-# Instrucciones específicas para Python
+
+# Developer Environment Setup Script
+sudo python3 developer_enviroment.py --help
+
+# Instalación interactiva
+sudo python3 developer_enviroment.py
+
+# Instalar todas las herramientas
+sudo python3 developer_enviroment.py --all
 ```
 
 ## 📚 Documentación
@@ -209,9 +217,9 @@ git push origin feature/nueva-funcionalidad
 
 ### **🚀 Próximas Funcionalidades**
 - **Scripts de Windows**: Utilidades para PowerShell y CMD
-- **Scripts Python Generales**: Herramientas multiplataforma
+- **Scripts Python Generales**: Herramientas multiplataforma ✅
 - **Automatización de DevOps**: Scripts para CI/CD
-- **Herramientas de Desarrollo**: Scripts para programadores
+- **Herramientas de Desarrollo**: Scripts para programadores ✅
 - **Utilidades de Sistema**: Herramientas para administradores
 
 ### **📅 Cronograma**
@@ -239,7 +247,7 @@ Este proyecto está bajo la **Licencia MIT**. Ver el archivo [LICENSE](LICENSE) 
 
 ## 📊 Estadísticas del Repositorio
 
-- **Scripts disponibles**: 1 (Arch Linux Maintenance)
+- **Scripts disponibles**: 2 (Arch Linux Maintenance + Developer Environment)
 - **Plataformas soportadas**: Linux (Arch)
 - **Lenguajes**: Python, Bash
 - **Documentación**: 100% cubierta
