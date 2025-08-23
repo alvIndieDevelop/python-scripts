@@ -1,6 +1,8 @@
-# 🚀 Arch Linux Maintenance Script
+# 🐧 Arch Linux Maintenance Script
 
 Script profesional de mantenimiento para Arch Linux con funcionalidades avanzadas de gestión del sistema, limpieza automática y recordatorios inteligentes.
+
+**Parte de [Python Scripts & Utilities Collection](../README.md)**
 
 ## 📋 Tabla de Contenidos
 
@@ -65,12 +67,12 @@ Script profesional de mantenimiento para Arch Linux con funcionalidades avanzada
 ### **Paso 1: Descargar el Script**
 
 ```bash
-# Clonar el repositorio
-git clone <tu-repositorio>
-cd arch-maintenance-script
+# Clonar el repositorio principal
+git clone https://github.com/alvIndieDevelop/python-scripts.git
+cd python-scripts/arch_linux
 
-# O descargar directamente
-wget <url-del-script>
+# O navegar desde el repositorio clonado
+cd arch_linux
 ```
 
 ### **Paso 2: Instalar en el Sistema**
@@ -496,12 +498,21 @@ ssh usuario@servidor "archm --status"
 ssh usuario@servidor "archm --full"
 ```
 
+## 🔗 Navegación del Repositorio
+
+- **🏠 [README Principal](../README.md)** - Visión general del repositorio
+- **🐧 [Arch Linux Scripts](./)** - Scripts específicos para Arch Linux
+- **🪟 [Windows Scripts](../windows/)** - Scripts para Windows (próximamente)
+- **🐍 [Python Scripts](../python/)** - Scripts Python generales (próximamente)
+
+---
+
 ## 🎉 ¡Disfruta de un Sistema Arch Linux Optimizado!
 
 ---
 
 **Versión**: 2.0  
-**Autor**: Tu nombre  
+**Autor**: alvIndieDevelop  
 **Licencia**: MIT  
 **Última actualización**: $(date +%Y-%m-%d)
 

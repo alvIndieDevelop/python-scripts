@@ -17,14 +17,16 @@ import stat
 def show_startup_banner():
     """Display an attractive startup banner"""
     print("╔══════════════════════════════════════════════════════════════════════════════╗")
-    print("║                    🚀 ARCH LINUX MAINTENANCE SCRIPT                        ║")
+    print("║                    🐧 ARCH LINUX MAINTENANCE SCRIPT                        ║")
     print("║                     Professional System Maintenance Tool                    ║")
     print("║                              Version 2.0                                   ║")
+    print("║                    Part of Python Scripts Collection                       ║")
     print("╚══════════════════════════════════════════════════════════════════════════════╝")
     print()
     print("🔧 Comprehensive system maintenance for Arch Linux")
     print("📦 Package management, cleanup, health checks, and optimization")
     print("🛡️  Safe, secure, and user-friendly maintenance operations")
+    print("🏠 Repository: https://github.com/alvIndieDevelop/python-scripts")
     print("=" * 80)
     print()
 
@@ -1829,8 +1831,8 @@ def main():
     
     # Configurar el parser de argumentos con más opciones y mejor descripción
     parser = argparse.ArgumentParser(
-        description="🚀 Arch Linux Maintenance Script - Comprehensive system maintenance tool",
-        epilog="💡 Use --full for complete system maintenance or combine specific tasks as needed.",
+        description="🐧 Arch Linux Maintenance Script - Comprehensive system maintenance tool",
+        epilog="💡 Use --full for complete system maintenance or combine specific tasks as needed.\n🏠 Part of Python Scripts Collection: https://github.com/alvIndieDevelop/python-scripts",
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     
@@ -1919,7 +1921,7 @@ def main():
     info_group.add_argument(
         "--version", 
         action="version", 
-        version="Arch Linux Maintenance Script v2.0"
+        version="Arch Linux Maintenance Script v2.0 - Part of Python Scripts Collection"
     )
     info_group.add_argument(
         "--status", 
