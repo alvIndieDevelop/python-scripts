@@ -1,71 +1,50 @@
-# 🐍 Python General Scripts & Utilities
+# 🐍 Python Scripts & Utilities Collection
 
-Scripts y utilidades Python multiplataforma para diferentes tareas y automatizaciones.
+Una colección de scripts y utilidades Python multiplataforma para diferentes tareas y automatizaciones.
 
-## 🚀 Scripts Disponibles
+## 🚀 Proyectos Disponibles
 
-### **🔧 Developer Environment Setup Script** ⭐
-Un script completo para configurar automáticamente un ambiente de desarrollo profesional en Arch Linux.
+### **🔧 Developer Environment Setup** ⭐
+Script completo para configurar automáticamente un ambiente de desarrollo profesional en Arch Linux.
 
 **Características principales:**
-- 🎯 **Instalación automática** de herramientas de desarrollo
-- 📦 **Gestión de paquetes** con pacman y AUR (yay)
-- 🖥️ **Interfaz interactiva** con menú fácil de usar
-- 🔧 **Configuración automática** post-instalación
-- 📝 **Logging completo** de todas las operaciones
-- 🚀 **Instalación masiva** o selectiva de herramientas
+- 🎯 Instalación automática de herramientas de desarrollo
+- 📦 Gestión de paquetes con pacman y AUR (yay)
+- 🖥️ Interfaz interactiva con menú fácil de usar
+- 🔧 Configuración automática post-instalación
+- 📝 Logging completo de todas las operaciones
 
 **Herramientas incluidas:**
-- **Node.js & NVM** - Runtime JavaScript y gestor de versiones
-- **Visual Studio Code** - Editor de código profesional
-- **Docker** - Plataforma de contenedores
-- **Git** - Control de versiones distribuido
-- **Python & UV** - Lenguaje Python y gestor de paquetes rápido
-- **PostgreSQL** - Base de datos relacional avanzada
-- **Redis** - Almacén de datos en memoria
-- **MongoDB** - Base de datos NoSQL orientada a documentos
-
-**Archivos:**
-- `developer_enviroment.py` - Script principal
-- `README.md` - Esta documentación
+- Node.js & NVM, VSCode, Docker, Git, Python, UV
+- PostgreSQL, Redis, MongoDB
 
 **Uso rápido:**
 ```bash
-# Instalación interactiva
-sudo python3 developer_enviroment.py
-
-# Instalar todas las herramientas
+cd developer_enviroment
+sudo python3 developer_enviroment.py --help
 sudo python3 developer_enviroment.py --all
-
-# Ver herramientas disponibles
-sudo python3 developer_enviroment.py --list
-
-# Ver estado de instalación
-sudo python3 developer_enviroment.py --status
 ```
 
-**Más información:** [Ver documentación del script](developer_enviroment.py)
+**Más información:** [Ver proyecto completo](developer_enviroment/)
 
 ---
 
-## 🚧 En Desarrollo
+## 🚧 Próximos Proyectos
 
-Esta sección está en desarrollo activo. Próximamente incluirá:
+### **📅 Cronograma de Desarrollo**
+- **Q4 2024**: ✅ Developer Environment Setup
+- **Q1 2025**: File Management Utilities
+- **Q2 2025**: Data Processing Scripts
+- **Q3 2025**: Web Scraping Tools
+- **Q4 2025**: API Integration Utilities
 
-### **🔄 Próximas Funcionalidades**
+### **🔄 Funcionalidades Planificadas**
 - **File Management** - Utilidades para gestión de archivos
 - **Data Processing** - Scripts para procesamiento de datos
 - **Web Scraping** - Herramientas de extracción web
 - **API Tools** - Utilidades para trabajar con APIs
 - **Database Scripts** - Herramientas para bases de datos
 - **Automation Tools** - Scripts de automatización general
-- **Development Utilities** - Herramientas para desarrolladores
-
-### **📅 Cronograma**
-- **Q4 2024**: Scripts básicos de gestión de archivos ✅
-- **Q1 2025**: Herramientas de procesamiento de datos
-- **Q2 2025**: Automatización web y APIs
-- **Q3 2025**: Utilidades avanzadas de desarrollo
 
 ---
 
@@ -75,6 +54,18 @@ Esta sección está en desarrollo activo. Próximamente incluirá:
 - **🐧 [Arch Linux Scripts](../arch_linux/)** - Scripts específicos para Arch Linux
 - **🪟 [Windows Scripts](../windows/)** - Scripts para Windows (próximamente)
 - **🐍 [Python Scripts](./)** - Scripts Python generales
+
+---
+
+## 🎯 Contribuciones
+
+¿Tienes ideas para nuevos proyectos Python? ¡Las contribuciones son bienvenidas!
+
+1. **Fork** del repositorio
+2. **Crea** una nueva carpeta para tu proyecto
+3. **Incluye** README.md con documentación
+4. **Actualiza** este README principal
+5. **Crea** un Pull Request
 
 ---
 
