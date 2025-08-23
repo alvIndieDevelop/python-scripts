@@ -10,6 +10,8 @@ import subprocess
 import argparse
 from pathlib import Path
 from datetime import datetime
+import shutil
+import stat
 
 
 def show_startup_banner():
@@ -82,6 +84,10 @@ class ArchLinuxMaintenance:
     def __init__(self):
         home_dir = Path.home()
         self.log_file = home_dir / ".arch_maintenance.log"
+        self.install_dir = home_dir / ".local" / "bin"
+        self.config_dir = home_dir / ".config" / "arch-maintenance"
+        self.script_name = "archm-maintenance"
+        self.short_command = "archm"
 
     def log_action(self, action, success=True):
         """Log the action to the log file with timestamp and success status"""
@@ -1306,6 +1312,515 @@ class ArchLinuxMaintenance:
         print("=" * 80)
         return success_count == len(tasks)
 
+    def install_script(self):
+        """Install the maintenance script to the system with comprehensive setup"""
+        print("🚀 Starting Arch Linux Maintenance Script installation...")
+        print("=" * 60)
+        print("📦 Installation and Setup Process")
+        print("=" * 60)
+        
+        # Step 1: Check if running as root
+        if os.geteuid() == 0:
+            print("❌ This script should not be run as root")
+            print("💡 Please run as a regular user with sudo privileges")
+            return False
+        
+        # Step 2: Check dependencies
+        print("🔍 Step 1: Checking system dependencies...")
+        dependencies = ["python3", "sudo"]
+        missing_deps = []
+        
+        for dep in dependencies:
+            if not shutil.which(dep):
+                missing_deps.append(dep)
+        
+        if missing_deps:
+            print(f"⚠️  Missing dependencies: {', '.join(missing_deps)}")
+            print("📦 Installing missing dependencies...")
+            
+            try:
+                install_cmd = f"sudo pacman -S --noconfirm {' '.join(missing_deps)}"
+                success = self.run_command(install_cmd, f"Installing dependencies: {', '.join(missing_deps)}")
+                if not success:
+                    print("❌ Failed to install dependencies")
+                    return False
+            except Exception as e:
+                print(f"❌ Error installing dependencies: {e}")
+                return False
+        else:
+            print("✅ All dependencies are available")
+        
+        # Step 3: Create installation directories
+        print("\n📁 Step 2: Creating installation directories...")
+        try:
+            self.install_dir.mkdir(parents=True, exist_ok=True)
+            self.config_dir.mkdir(parents=True, exist_ok=True)
+            print(f"✅ Created: {self.install_dir}")
+            print(f"✅ Created: {self.config_dir}")
+        except Exception as e:
+            print(f"❌ Failed to create directories: {e}")
+            return False
+        
+        # Step 4: Copy main script
+        print("\n📋 Step 3: Installing main script...")
+        try:
+            current_script = Path(__file__).resolve()
+            target_script = self.install_dir / self.script_name
+            
+            shutil.copy2(current_script, target_script)
+            
+            # Make executable
+            target_script.chmod(target_script.stat().st_mode | stat.S_IEXEC)
+            
+            print(f"✅ Script installed: {target_script}")
+            print(f"✅ Made executable")
+        except Exception as e:
+            print(f"❌ Failed to install script: {e}")
+            return False
+        
+        # Step 5: Create short command symlink
+        print("\n🔗 Step 4: Creating short command link...")
+        try:
+            short_link = self.install_dir / self.short_command
+            if short_link.exists():
+                short_link.unlink()
+            
+            short_link.symlink_to(target_script)
+            print(f"✅ Short command created: {short_link}")
+        except Exception as e:
+            print(f"⚠️  Failed to create short command: {e}")
+        
+        # Step 6: Add to PATH
+        print("\n🌐 Step 5: Adding to system PATH...")
+        try:
+            shell_rc = self._get_shell_rc()
+            if shell_rc and shell_rc.exists():
+                self._add_to_path(shell_rc)
+                print(f"✅ PATH updated in: {shell_rc}")
+            else:
+                print("⚠️  Could not determine shell configuration file")
+        except Exception as e:
+            print(f"⚠️  Failed to update PATH: {e}")
+        
+        # Step 7: Configure automatic reminders
+        print("\n⏰ Step 6: Configuring automatic reminders...")
+        reminder_choice = self._configure_reminders()
+        if reminder_choice:
+            self._setup_reminders(reminder_choice)
+        
+        # Step 8: Installation summary
+        print("\n" + "=" * 60)
+        print("🎉 INSTALLATION COMPLETED SUCCESSFULLY!")
+        print("=" * 60)
+        print("📁 Installation locations:")
+        print(f"   🚀 Main script: {self.install_dir / self.script_name}")
+        print(f"   🔗 Short command: {self.install_dir / self.short_command}")
+        print(f"   ⚙️  Configuration: {self.config_dir}")
+        print()
+        print("💻 Available commands:")
+        print(f"   {self.script_name} --help     (Show help)")
+        print(f"   {self.script_name} --full     (Complete maintenance)")
+        print(f"   {self.script_name}            (Interactive menu)")
+        print(f"   {self.short_command} --help    (Short command)")
+        print()
+        print("⏰ Reminder configured: {reminder_choice}")
+        print()
+        print("💡 To complete installation:")
+        print("   • Restart your terminal")
+        print("   • Or run: source ~/.zshrc (or ~/.bashrc)")
+        print()
+        
+        self.log_action("Script installation completed successfully", success=True)
+        return True
+
+    def uninstall_script(self):
+        """Uninstall the maintenance script from the system"""
+        print("🗑️  Starting Arch Linux Maintenance Script uninstallation...")
+        print("=" * 60)
+        print("🧹 Uninstallation and Cleanup Process")
+        print("=" * 60)
+        
+        # Step 1: Confirm uninstallation
+        print("⚠️  This will remove the Arch Linux Maintenance Script from your system")
+        print("📁 All configuration files and reminders will be deleted")
+        print()
+        
+        try:
+            response = input("Are you sure you want to uninstall? (y/N): ").strip()
+            if response.lower() != 'y':
+                print("❌ Uninstallation cancelled")
+                return False
+        except KeyboardInterrupt:
+            print("\n❌ Uninstallation cancelled")
+            return False
+        
+        # Step 2: Remove main script
+        print("\n🗑️  Step 1: Removing main script...")
+        try:
+            main_script = self.install_dir / self.script_name
+            if main_script.exists():
+                main_script.unlink()
+                print(f"✅ Removed: {main_script}")
+            else:
+                print("ℹ️  Main script not found")
+        except Exception as e:
+            print(f"⚠️  Failed to remove main script: {e}")
+        
+        # Step 3: Remove short command
+        print("\n🔗 Step 2: Removing short command...")
+        try:
+            short_link = self.install_dir / self.short_command
+            if short_link.exists():
+                short_link.unlink()
+                print(f"✅ Removed: {short_link}")
+            else:
+                print("ℹ️  Short command not found")
+        except Exception as e:
+            print(f"⚠️  Failed to remove short command: {e}")
+        
+        # Step 4: Remove configuration
+        print("\n⚙️  Step 3: Removing configuration...")
+        try:
+            if self.config_dir.exists():
+                shutil.rmtree(self.config_dir)
+                print(f"✅ Removed: {self.config_dir}")
+            else:
+                print("ℹ️  Configuration directory not found")
+        except Exception as e:
+            print(f"⚠️  Failed to remove configuration: {e}")
+        
+        # Step 5: Remove reminder file
+        print("\n⏰ Step 4: Removing reminder file...")
+        try:
+            reminder_file = Path.home() / ".arch_maintenance_reminder"
+            if reminder_file.exists():
+                reminder_file.unlink()
+                print(f"✅ Removed: {reminder_file}")
+            else:
+                print("ℹ️  Reminder file not found")
+        except Exception as e:
+            print(f"⚠️  Failed to remove reminder file: {e}")
+        
+        # Step 6: Clean shell configuration
+        print("\n🐚 Step 5: Cleaning shell configuration...")
+        try:
+            shell_rc = self._get_shell_rc()
+            if shell_rc and shell_rc.exists():
+                self._clean_shell_config(shell_rc)
+                print(f"✅ Cleaned: {shell_rc}")
+            else:
+                print("ℹ️  Shell configuration file not found")
+        except Exception as e:
+            print(f"⚠️  Failed to clean shell configuration: {e}")
+        
+        # Step 7: Uninstallation summary
+        print("\n" + "=" * 60)
+        print("🎉 UNINSTALLATION COMPLETED SUCCESSFULLY!")
+        print("=" * 60)
+        print("✅ All files and configurations have been removed")
+        print()
+        print("💡 To complete uninstallation:")
+        print("   • Restart your terminal")
+        print("   • Or run: source ~/.zshrc (or ~/.bashrc)")
+        print()
+        print("👋 Thank you for using Arch Linux Maintenance Script!")
+        print()
+        
+        self.log_action("Script uninstallation completed successfully", success=True)
+        return True
+
+    def _get_shell_rc(self):
+        """Get the appropriate shell configuration file path"""
+        shell = os.getenv('SHELL', '')
+        home = Path.home()
+        
+        if 'zsh' in shell:
+            return home / '.zshrc'
+        elif 'bash' in shell:
+            return home / '.bashrc'
+        else:
+            return home / '.profile'
+
+    def _add_to_path(self, shell_rc):
+        """Add the installation directory to PATH in shell configuration"""
+        try:
+            with open(shell_rc, 'r') as f:
+                content = f.read()
+            
+            # Check if already added
+            if str(self.install_dir) in content:
+                return
+            
+            # Add to PATH
+            path_line = f'\n# Arch Linux Maintenance Script\nexport PATH="{self.install_dir}:$PATH"\n'
+            
+            with open(shell_rc, 'a') as f:
+                f.write(path_line)
+                
+        except Exception as e:
+            print(f"⚠️  Failed to update PATH: {e}")
+
+    def _clean_shell_config(self, shell_rc):
+        """Clean shell configuration file from maintenance script entries"""
+        try:
+            with open(shell_rc, 'r') as f:
+                lines = f.readlines()
+            
+            # Remove maintenance script related lines
+            cleaned_lines = []
+            skip_next = 0
+            
+            for line in lines:
+                if '# Arch Linux Maintenance Script' in line:
+                    skip_next = 2
+                    continue
+                elif '# Arch Linux Maintenance Reminder' in line:
+                    skip_next = 4
+                    continue
+                elif skip_next > 0:
+                    skip_next -= 1
+                    continue
+                else:
+                    cleaned_lines.append(line)
+            
+            # Write cleaned content
+            with open(shell_rc, 'w') as f:
+                f.writelines(cleaned_lines)
+                
+        except Exception as e:
+            print(f"⚠️  Failed to clean shell configuration: {e}")
+
+    def _configure_reminders(self):
+        """Configure automatic maintenance reminders"""
+        print("⏰ Configure automatic maintenance reminders:")
+        print("1. Weekly (recommended)")
+        print("2. Bi-weekly (every 2 weeks)")
+        print("3. Monthly (every 4 weeks)")
+        print("4. Custom (specify days)")
+        print("5. No automatic reminders")
+        print()
+        
+        try:
+            choice = input("Select an option (1-5): ").strip()
+            
+            if choice == '1':
+                return "Weekly (7 days)"
+            elif choice == '2':
+                return "Bi-weekly (14 days)"
+            elif choice == '3':
+                return "Monthly (28 days)"
+            elif choice == '4':
+                try:
+                    days = input("Specify number of days between reminders: ").strip()
+                    days_int = int(days)
+                    return f"Custom ({days_int} days)"
+                except ValueError:
+                    print("⚠️  Invalid input, using weekly reminders")
+                    return "Weekly (7 days)"
+            elif choice == '5':
+                return "Disabled"
+            else:
+                print("⚠️  Invalid option, using weekly reminders")
+                return "Weekly (7 days)"
+        except KeyboardInterrupt:
+            print("\n⚠️  Using default weekly reminders")
+            return "Weekly (7 days)"
+
+    def _setup_reminders(self, reminder_type):
+        """Setup automatic maintenance reminders"""
+        if reminder_type == "Disabled":
+            print("ℹ️  Automatic reminders disabled")
+            return
+        
+        try:
+            # Parse reminder type to get days
+            if "Weekly" in reminder_type:
+                days = 7
+            elif "Bi-weekly" in reminder_type:
+                days = 14
+            elif "Monthly" in reminder_type:
+                days = 28
+            elif "Custom" in reminder_type:
+                days = int(reminder_type.split('(')[1].split()[0])
+            else:
+                days = 7
+            
+            # Create reminder script
+            reminder_script = self.config_dir / "maintenance-reminder.sh"
+            
+            reminder_content = f'''#!/bin/bash
+# Arch Linux Maintenance Reminder
+# Generated by installer
+
+MAINTENANCE_LOG="$HOME/.arch_maintenance.log"
+REMINDER_FILE="$HOME/.arch_maintenance_reminder"
+REMINDER_DAYS={days}
+
+# Check if reminder should be shown
+should_show_reminder() {{
+    if [ ! -f "$MAINTENANCE_LOG" ]; then
+        return 1
+    fi
+    
+    if [ -f "$REMINDER_FILE" ]; then
+        LAST_REMINDER=$(cat "$REMINDER_FILE")
+        CURRENT_DATE=$(date +%Y-%m-%d)
+        
+        LAST_TIMESTAMP=$(date -d "$LAST_REMINDER" +%s 2>/dev/null)
+        CURRENT_TIMESTAMP=$(date +%s)
+        DAYS_DIFF=$(( (CURRENT_TIMESTAMP - LAST_TIMESTAMP) / 86400 ))
+        
+        if [ $DAYS_DIFF -lt $REMINDER_DAYS ]; then
+            return 1
+        fi
+    fi
+    
+    return 0
+}}
+
+# Show reminder
+show_reminder() {{
+    echo ""
+    echo "╔══════════════════════════════════════════════════════════════╗"
+    echo "║                    MAINTENANCE REMINDER                   ║"
+    echo "╚══════════════════════════════════════════════════════════════╝"
+    echo ""
+    echo "⏰ It's time for your {reminder_type} Arch Linux maintenance!"
+    echo "💡 This helps keep your system secure and optimized."
+    echo ""
+    echo "Options:"
+    echo "   🚀 archm-maintenance --full     (Complete maintenance)"
+    echo "   📋 archm-maintenance            (Interactive menu)"
+    echo "   📊 archm-maintenance --status  (Check system status)"
+    echo ""
+    
+    read -p "🔄 Run maintenance now? (Y/n): " -n 1 -r
+    echo
+    
+    if [[ $REPLY =~ ^[Nn]$ ]]; then
+        echo "⏰ No problem! You can run it later with: archm-maintenance --full"
+        echo "💡 Reminder will appear again in $REMINDER_DAYS days."
+    else
+        echo "🚀 Starting maintenance..."
+        archm-maintenance --full
+    fi
+    
+    echo ""
+}}
+
+# Update reminder timestamp
+update_reminder_timestamp() {{
+    date +%Y-%m-%d > "$REMINDER_FILE"
+}}
+
+# Main function
+main() {{
+    if should_show_reminder; then
+        show_reminder
+        update_reminder_timestamp
+    fi
+}}
+
+# Execute only if called directly
+if [[ "${{BASH_SOURCE[0]}}" == "${{0}}" ]]; then
+    main
+fi
+'''
+            
+            with open(reminder_script, 'w') as f:
+                f.write(reminder_content)
+            
+            # Make executable
+            reminder_script.chmod(reminder_script.stat().st_mode | stat.S_IEXEC)
+            
+            # Add to shell configuration
+            shell_rc = self._get_shell_rc()
+            if shell_rc and shell_rc.exists():
+                self._add_reminder_to_shell(shell_rc)
+            
+            print(f"✅ Reminders configured: {reminder_type}")
+            
+        except Exception as e:
+            print(f"⚠️  Failed to setup reminders: {e}")
+
+    def _add_reminder_to_shell(self, shell_rc):
+        """Add reminder script to shell configuration"""
+        try:
+            with open(shell_rc, 'r') as f:
+                content = f.read()
+            
+            # Check if already added
+            if "maintenance-reminder.sh" in content:
+                return
+            
+            # Add reminder configuration
+            reminder_config = f'''
+# Arch Linux Maintenance Reminder
+if [ -f ~/.config/arch-maintenance/maintenance-reminder.sh ]; then
+    source ~/.config/arch-maintenance/maintenance-reminder.sh
+fi
+'''
+            
+            with open(shell_rc, 'a') as f:
+                f.write(reminder_config)
+                
+        except Exception as e:
+            print(f"⚠️  Failed to add reminder to shell: {e}")
+
+    def is_installed(self):
+        """Check if the maintenance script is installed in the system"""
+        main_script = self.install_dir / self.script_name
+        short_command = self.install_dir / self.short_command
+        config_exists = self.config_dir.exists()
+        
+        return {
+            "installed": main_script.exists(),
+            "main_script": str(main_script) if main_script.exists() else None,
+            "short_command": str(short_command) if short_command.exists() else None,
+            "config_dir": str(self.config_dir) if config_exists else None,
+            "in_path": str(self.install_dir) in os.getenv('PATH', '')
+        }
+
+    def get_installation_status(self):
+        """Get detailed installation status information"""
+        status = self.is_installed()
+        
+        print("🔧 Installation Status")
+        print("=" * 50)
+        
+        if status["installed"]:
+            print("✅ Script is installed")
+            print(f"   📁 Main script: {status['main_script']}")
+            
+            if status["short_command"]:
+                print(f"   🔗 Short command: {status['short_command']}")
+            else:
+                print("   ❌ Short command: Not found")
+            
+            if status["config_dir"]:
+                print(f"   ⚙️  Configuration: {status['config_dir']}")
+            else:
+                print("   ❌ Configuration: Not found")
+            
+            if status["in_path"]:
+                print("   🌐 PATH: Updated")
+            else:
+                print("   ⚠️  PATH: Not updated (restart terminal or source shell config)")
+            
+            # Check reminder configuration
+            reminder_script = self.config_dir / "maintenance-reminder.sh"
+            if reminder_script.exists():
+                print("   ⏰ Reminders: Configured")
+            else:
+                print("   ⏰ Reminders: Not configured")
+                
+        else:
+            print("❌ Script is not installed")
+            print("💡 Use --install to install the script")
+        
+        print("=" * 50)
+        return status
+
 
 def main():
     """Main function to run the Arch Linux maintenance script with enhanced features and interactive CLI menu"""
@@ -1412,6 +1927,24 @@ def main():
         help="📊 Show current system status and maintenance history"
     )
     
+    # Argumentos de instalación
+    install_group = parser.add_argument_group("🔧 Installation Options")
+    install_group.add_argument(
+        "--install", 
+        action="store_true", 
+        help="🚀 Install the maintenance script to the system"
+    )
+    install_group.add_argument(
+        "--uninstall", 
+        action="store_true", 
+        help="🗑️  Uninstall the maintenance script from the system"
+    )
+    install_group.add_argument(
+        "--check-install", 
+        action="store_true", 
+        help="🔍 Check if the script is installed and show installation status"
+    )
+    
     # Parsear argumentos
     try:
         args = parser.parse_args()
@@ -1422,13 +1955,13 @@ def main():
     
     # Si no hay argumentos, mostrar menú interactivo
     if not any([args.full, args.update, args.clean, args.aur, args.logs, 
-                args.health, args.disk, args.locate, args.status]):
+                args.health, args.disk, args.locate, args.status, args.install, args.uninstall, args.check_install]):
         show_interactive_menu()
         return
     
     # Validar argumentos
     if not any([args.full, args.update, args.clean, args.aur, args.logs, 
-                args.health, args.disk, args.locate, args.status]):
+                args.health, args.disk, args.locate, args.status, args.install, args.uninstall, args.check_install]):
         print("❌ No maintenance operation specified!")
         print("💡 Use --help to see available options")
         print("💡 Use --full for complete maintenance")
@@ -1448,6 +1981,28 @@ def main():
     # Mostrar información del sistema si se solicita
     if args.status:
         show_system_status(maintenance)
+        return
+    
+    # Verificar estado de instalación si se solicita
+    if args.check_install:
+        maintenance.get_installation_status()
+        return
+    
+    # Ejecutar operaciones de instalación/desinstalación
+    if args.install:
+        success = run_operation("Script Installation", maintenance.install_script)
+        if success:
+            print("🎉 Installation completed successfully!")
+        else:
+            print("❌ Installation failed. Check the logs for details.")
+        return
+    
+    if args.uninstall:
+        success = run_operation("Script Uninstallation", maintenance.uninstall_script)
+        if success:
+            print("🎉 Uninstallation completed successfully!")
+        else:
+            print("❌ Uninstallation failed. Check the logs for details.")
         return
     
     # Ejecutar operaciones de mantenimiento
@@ -1559,17 +2114,20 @@ def show_interactive_menu():
         print("🏥 7. Check System Health")
         print("💾 8. Check Disk Usage")
         print("📊 9. Show System Status")
+        print("🔧 10. Install Script to System")
+        print("🗑️  11. Uninstall Script from System")
+        print("🔍 12. Check Installation Status")
         print("❌ 0. Exit")
         print("=" * 50)
     
     def get_user_choice():
         while True:
             try:
-                choice = input("🎯 Select an option (0-9): ").strip()
-                if choice in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
+                choice = input("🎯 Select an option (0-12): ").strip()
+                if choice in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']:
                     return int(choice)
                 else:
-                    print("❌ Invalid option. Please select 0-9.")
+                    print("❌ Invalid option. Please select 0-12.")
             except KeyboardInterrupt:
                 print("\n\n👋 Goodbye!")
                 sys.exit(0)
@@ -1605,6 +2163,15 @@ def show_interactive_menu():
             maintenance.check_disk_usage()
         elif choice == 9:
             show_system_status(maintenance)
+        elif choice == 10:
+            print("🔧 Starting script installation...")
+            maintenance.install_script()
+        elif choice == 11:
+            print("🗑️  Starting script uninstallation...")
+            maintenance.uninstall_script()
+        elif choice == 12:
+            print("🔍 Checking installation status...")
+            maintenance.get_installation_status()
     
     # Main menu loop
     while True:
@@ -1665,6 +2232,10 @@ def show_system_status(maintenance):
         print("📝 No log file found (first run)")
     
     print("=" * 50)
+    
+    # Mostrar estado de instalación
+    print()
+    maintenance.get_installation_status()
 
 
 def show_final_summary(success_count, total_operations):
