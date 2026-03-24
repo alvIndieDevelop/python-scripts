@@ -45,22 +45,58 @@ Scripts profesionales para gestión y mantenimiento de Windows 10 y Windows 11, 
 
 ## 🚀 Instalación
 
-### **Requisitos Previos**
-- **Python**: 3.7 o superior
-- **Sistema**: Windows 10 o Windows 11
-- **Permisos**: Algunas funciones requieren ejecutar como Administrador
+Hay **dos formas** de usar estos scripts. Elige la que prefieras:
 
-### **Paso 1: Descargar**
+### **Opción A: Ejecutables (.exe) — Sin instalar nada** ⭐
+
+Si **no tienes Python** o prefieres la forma más sencilla:
+
+1. Ve a la sección [Releases](https://github.com/alvIndieDevelop/python-scripts/releases) del repositorio
+2. Descarga `SpaceManager.exe` y/o `PerformanceManager.exe`
+3. Haz doble clic en el `.exe` para ejecutar
+
+> 💡 **No necesitas instalar Python ni nada más.** Los `.exe` incluyen todo lo necesario.
+
+#### Generar los .exe tú mismo
+
+Si prefieres compilar los ejecutables desde el código fuente:
+
+```powershell
+# 1. Clona el repositorio
+git clone https://github.com/alvIndieDevelop/python-scripts.git
+cd python-scripts\windows
+
+# 2. Instala PyInstaller (solo una vez)
+pip install pyinstaller
+
+# 3. Genera los .exe
+python build_exe.py              # Ambos scripts
+python build_exe.py --space      # Solo Space Manager
+python build_exe.py --perf       # Solo Performance Manager
+```
+
+Los ejecutables se generan en la carpeta `dist/`.
+
+### **Opción B: Con Python — Para desarrolladores**
+
+#### Instalar Python (si no lo tienes)
+
+1. Descarga Python desde [python.org/downloads](https://www.python.org/downloads/)
+2. **IMPORTANTE:** Durante la instalación, marca la casilla **"Add Python to PATH"** ✅
+3. Reinicia tu terminal después de instalar
+
+Verificar la instalación:
+```powershell
+python --version    # Debe mostrar Python 3.7 o superior
+```
+
+#### Descargar y Ejecutar
 
 ```powershell
 # Clonar el repositorio
 git clone https://github.com/alvIndieDevelop/python-scripts.git
 cd python-scripts\windows
-```
 
-### **Paso 2: Ejecutar**
-
-```powershell
 # Gestor de Espacio (modo interactivo)
 python space_manager.py
 
@@ -68,7 +104,9 @@ python space_manager.py
 python performance_manager.py
 ```
 
-### **Paso 3: Para funciones avanzadas**
+> 💡 **No se necesita `pip install`** — los scripts usan solo la librería estándar de Python.
+
+### **Permisos de Administrador**
 
 Algunas funciones necesitan permisos de administrador:
 1. Busca "cmd" en el menú inicio
