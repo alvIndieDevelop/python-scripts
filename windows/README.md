@@ -37,6 +37,18 @@ Scripts profesionales para gestión y mantenimiento de Windows 10 y Windows 11, 
 - **Salud del disco** — verificar si los discos están sanos
 - **Verificación de integridad** — reparar archivos de Windows
 
+### 🚀 **Optimización y Mantenimiento** (Nuevo en v2.0)
+- **Plan de alto rendimiento** — cambiar al plan de máxima velocidad
+- **Efectos visuales** — desactivar animaciones y transparencia
+- **Servicios innecesarios** — desactivar servicios de bloatware
+- **Telemetría y rastreo** — reducir la recolección de datos en segundo plano
+- **Indexación de búsqueda** — optimizar o desactivar Windows Search
+- **Tips y sugerencias** — desactivar notificaciones publicitarias
+- **Optimización de memoria** — liberar RAM y limpiar cachés
+- **Caché de red** — limpiar DNS y reiniciar componentes de red
+- **Reparación DISM** — reparación profunda del almacén de componentes
+- **Optimización completa** — ejecutar todas las optimizaciones de una vez
+
 ### 🪟 **Compatibilidad**
 - **Windows 10** — Todas las versiones soportadas
 - **Windows 11** — Optimizado para la versión más reciente
@@ -143,7 +155,7 @@ python space_manager.py --system-files        # Info de archivos del sistema
 python space_manager.py --report              # Exportar reporte de espacio
 python space_manager.py --full                # Análisis completo
 
-# ─── Gestor de Rendimiento ───
+# ─── Gestor de Rendimiento (Diagnósticos) ───
 python performance_manager.py --dashboard     # Dashboard del sistema
 python performance_manager.py --processes     # Procesos principales
 python performance_manager.py --startup       # Programas de inicio
@@ -151,8 +163,22 @@ python performance_manager.py --services      # Estado de servicios del sistema
 python performance_manager.py --disk-health   # Salud del disco
 python performance_manager.py --power         # Plan de energía
 python performance_manager.py --updates       # Estado de Windows Update
-python performance_manager.py --sfc           # Verificar integridad (admin)
-python performance_manager.py --full          # Chequeo completo
+
+# ─── Gestor de Rendimiento (Optimización) ───
+python performance_manager.py --high-perf         # Plan de alto rendimiento
+python performance_manager.py --visual            # Optimizar efectos visuales (admin)
+python performance_manager.py --disable-services  # Desactivar servicios innecesarios (admin)
+python performance_manager.py --disable-telemetry # Desactivar telemetría (admin)
+python performance_manager.py --optimize-search   # Optimizar indexación de búsqueda (admin)
+python performance_manager.py --disable-tips      # Desactivar tips y sugerencias
+python performance_manager.py --optimize-memory   # Optimizar uso de memoria
+python performance_manager.py --clean-network     # Limpiar caché de red (admin)
+
+# ─── Gestor de Rendimiento (Reparación) ───
+python performance_manager.py --sfc               # Verificar integridad SFC (admin)
+python performance_manager.py --dism              # Reparación DISM profunda (admin)
+python performance_manager.py --full-check        # Chequeo completo (solo diagnósticos)
+python performance_manager.py --full-optimize     # Optimización completa (aplicar todo)
 ```
 
 ## 📦 Scripts Disponibles
@@ -171,7 +197,9 @@ python performance_manager.py --full          # Chequeo completo
 | Info de archivos del sistema | Ver pagefile e hibernación | 🟢 Seguro |
 | Exportar reporte | Generar reporte de espacio | 🟢 Seguro |
 
-### ⚡ **Performance Manager** (`performance_manager.py`) — Gestor de Rendimiento
+### ⚡ **Performance Manager** (`performance_manager.py`) — Gestor de Rendimiento v2.0
+
+**📊 Diagnósticos:**
 
 | Función | Descripción | Riesgo |
 | ------- | ----------- | ------ |
@@ -182,7 +210,27 @@ python performance_manager.py --full          # Chequeo completo
 | Salud del disco | Verificar estado de los discos | 🟢 Seguro |
 | Plan de energía | Ver y gestionar plan de energía | 🟢 Seguro |
 | Windows Update | Verificar si Windows está actualizado | 🟢 Seguro |
-| Verificar integridad | Reparar archivos de Windows | 🟡 Moderado |
+
+**🚀 Optimización y Velocidad:**
+
+| Función | Descripción | Riesgo |
+| ------- | ----------- | ------ |
+| Alto rendimiento | Cambiar al plan de máxima velocidad | 🔵 Bajo |
+| Efectos visuales | Desactivar animaciones y transparencia | 🟡 Moderado |
+| Servicios bloatware | Desactivar servicios innecesarios | 🟡 Moderado |
+| Telemetría | Reducir recolección de datos en segundo plano | 🟡 Moderado |
+| Búsqueda (Search) | Optimizar o desactivar indexación | 🔵 Bajo |
+| Tips y sugerencias | Desactivar notificaciones publicitarias | 🔵 Bajo |
+| Memoria | Liberar RAM y optimizar cachés | 🔵 Bajo |
+| Caché de red | Limpiar DNS y reiniciar red | 🔵 Bajo |
+
+**🛠️ Reparación:**
+
+| Función | Descripción | Riesgo |
+| ------- | ----------- | ------ |
+| Verificar integridad (SFC) | Reparar archivos de Windows | 🟡 Moderado |
+| Reparación DISM | Reparación profunda del sistema | 🟡 Moderado |
+| Optimización completa | Ejecutar todas las optimizaciones | 🟡 Moderado |
 
 ## 🔍 Troubleshooting
 
@@ -254,7 +302,7 @@ Get-Content "$env:LOCALAPPDATA\PerformanceManager\performance_manager.log"
 
 ## 📊 Información del Proyecto
 
-**Versión**: 1.0
+**Versión**: 2.0
 **Autor**: alvIndieDevelop
 **Licencia**: MIT
 **Compatibilidad**: Windows 10, Windows 11

@@ -33,9 +33,9 @@ SCRIPTS = {
     },
     "perf": {
         "source": "performance_manager.py",
-        "name": "PerformanceManager",
+        "name": "OptimizadorDeRendimiento",
         "icon": None,
-        "description": "Windows Performance Manager - System monitoring and optimization",
+        "description": "Optimizador de Rendimiento de Windows - Monitoreo y optimizacion del sistema",
     },
 }
 
