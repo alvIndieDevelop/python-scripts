@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "webwrap"
+version = "0.3.1"
+description = "Manage Chromium web applications on Linux"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "alvIndieDevelop" }]
+keywords = ["chromium", "desktop-entry", "gtk", "linux", "web-app"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: X11 Applications :: GTK",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Desktop Environment",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/alvIndieDevelop/python-scripts/tree/main/apps/webwrap"
+Repository = "https://github.com/alvIndieDevelop/python-scripts"
+Issues = "https://github.com/alvIndieDevelop/python-scripts/issues"
+
+[project.scripts]
+webwrap = "webwrap.main:main"
+
+[project.gui-scripts]
+webwrap-gui = "webwrap.gui:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
